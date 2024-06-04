@@ -3,8 +3,22 @@
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
 'use strict';
 
+// functional library
+
 var _ = {};
 
+/*
+var _ = {
+    identity: function(){
+
+    },
+    typeof: function() {
+
+    },
+}
+
+
+*/
 
 /**
 * START OF OUR LIBRARY!
@@ -20,9 +34,12 @@ var _ = {};
 *   _.identity(5) === 5
 *   _.identity({a: "b"}) === {a: "b"}
 */
+_.identity = function(value) {
+    // return input value unchanged
+    return value;
+}
 
-
-/** _.typeOf
+/** _.typeOfS
 * Arguments:
 *   1) Any value
 * Objectives:
@@ -41,6 +58,37 @@ var _ = {};
 * _.typeOf("javascript") -> "string"
 * _.typeOf([1,2,3]) -> "array"
 */
+// takes in a value
+// returns the typeof value
+
+_.typeOf = function(value) {
+
+    // check if 
+    if (typeof (value) === 'string') {
+        return typeof(value);
+    }
+    if (typeof (value) === 'number') {
+        return typeof(value);
+    }
+    if (typeof (value) === 'function') {
+        return typeof(value);
+    }
+    if (typeof (value) === 'boolean') {
+        return typeof(value);
+    }
+    if (typeof (value) === 'undefined') {
+        return typeof(value);
+    }
+    if (Array.isArray(value)) {
+        return 'array';
+    }
+    if (typeof (value) === 'object' && !Array.isArray(value) && value !== null) {
+        return typeof(value);
+    }
+    if (value === null) {
+        return 'null';
+}
+}
 
 
 /** _.first
@@ -61,6 +109,33 @@ var _ = {};
 *   _.first(["a", "b", "c"], 2) -> ["a", "b"]
 */
 
+_.first = function(array, num) {
+    // if array is not an array
+    if (!Array.isArray(array)) {
+        // return empty array
+        return [];
+    // otherwise do this...
+    } else { 
+        // if num is undefined or if num is not a number...
+        if (num === undefined || typeof num !== 'number') {
+            // return first index of array
+            return array[0];
+        // otherwise do this...
+        } else {
+            // create storage array
+            let result = [];
+            // iterate over the array indexes as long as..
+                // i is less than num and...
+                    // i is less than the length of the array
+            for (let i = 0; i < num && i < array.length; i++) {
+                // push each index of array to result array
+                result.push(array[i]);
+            // return result array
+            }  return result;
+        }
+    } 
+}
+
 
 /** _.last
 * Arguments:
@@ -80,6 +155,40 @@ var _ = {};
 *   _.last(["a", "b", "c"], 2) -> ["b", "c"]
 */
 
+_.last = function(array, num) {
+    // if array is not an array
+    if (!Array.isArray(array)) {
+        // then return empty array p[]
+        return [];
+    // otherwise...
+    } else {
+        // if num is undefined or is not a number...
+        if (num === undefined || typeof num !== 'number') {
+            // return the last index of the array
+            return array[array.length -1];
+        // otherwise...
+        } else {
+            // if num is greater than array.length...
+            if (num >= array.length) {
+                return array;
+            } // otherwise...
+            // create storage array
+            let result = [];
+            // iterate through the array
+                /// start at difference between array.length and num
+                    // as long as i is less than array.length &&
+                    // as long as i is greater than or equal to 0
+                        //  i++
+            for (let i = array.length - num; i < array.length && i >= 0; i++) {
+                // add the value of array index to result array
+                result.push(array[i]);
+            }
+            // return result
+            return result;
+        }
+    }
+}
+
 
 /** _.indexOf
 * Arguments:
@@ -97,6 +206,17 @@ var _ = {};
 *   _.indexOf(["a","b","c"], "d") -> -1
 */
 
+// return index of array that is the first occurance of value
+// return -1 if value is not in array
+// if value isn't in array return -1
+// do not use [].indexOf()
+// if 
+// return array[value]
+
+_.indexOf = function(array, value) {
+
+
+}
 
 /** _.contains
 * Arguments:
@@ -208,6 +328,63 @@ var _ = {};
 * Examples:
 *   _.map([1,2,3,4], function(e){return e * 2}) -> [2,4,6,8]
 */
+
+// _.map = function(collection, func) {
+//     // create output array
+//     let output = [];
+//     // determine if input collection is an array
+//     if (Array.hasArray(collection)) {
+//         // iterate over collection
+//         for (i = 0; i < collection.length; i++) {
+//             // push result of invoking function into output 
+//             output.push(func(collection[i], i, collection));
+//         }
+//         // otherwise...
+//     } else {
+//         // iterate over the collectioon
+        
+//     }
+//     // else it's an object
+//         // invoke function on the value, key, and collection
+
+//     // return output array
+// }
+
+
+// _.map([1, 2, 3], function(num)) {
+//     return num * 3;
+// }; // [10, 20, 30]
+// // map
+//     // iterates over a collection and returns a new collection where each value has been "transformed" by a callback function
+//         // "transformed" => an individual value is passed to the callback and the return value of the callback is pushed into the output array
+
+// var nums = [1, 2, 3];
+
+// _.map(nums, function(num) {
+//     return num * 10;
+// });
+// // [10, 20, 30]
+
+// // another example
+
+// var letters = ['a', 'b', 'c'];
+// _.map(letters, function(letter) {
+//     return letter.toUpperCase();
+// });
+// // ['A', 'B', C']
+
+// // another example
+
+// var students = [
+//     { name: 'Colton', course: 'Bootcamp'},
+//     { name: 'Jerry', course: 'Bootcamp'},
+//     { name: 'Tyler', course: 'Precourse'}
+// ];
+
+// _.map(students, function(student) {
+//     return student.name;
+// });
+// // ['Colton', 'Jerry', 'Tyler']
 
 
 /** _.pluck
