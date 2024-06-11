@@ -63,28 +63,35 @@ _.identity = function(value) {
 
 _.typeOf = function(value) {
 
-    // check if 
+    // check if value is string
     if (typeof (value) === 'string') {
         return typeof(value);
     }
+    // check if value is number
     if (typeof (value) === 'number') {
         return typeof(value);
     }
+    // check if value is function
     if (typeof (value) === 'function') {
         return typeof(value);
     }
+    // check if value is boolean
     if (typeof (value) === 'boolean') {
         return typeof(value);
     }
+    // check if value is undefined
     if (typeof (value) === 'undefined') {
         return typeof(value);
     }
+    // check if value is array
     if (Array.isArray(value)) {
         return 'array';
     }
+    // check if value is object
     if (typeof (value) === 'object' && !Array.isArray(value) && value !== null) {
         return typeof(value);
     }
+    // check if value is null
     if (value === null) {
         return 'null';
 }
@@ -206,16 +213,19 @@ _.last = function(array, num) {
 *   _.indexOf(["a","b","c"], "d") -> -1
 */
 
-// return index of array that is the first occurance of value
-// return -1 if value is not in array
-// if value isn't in array return -1
-// do not use [].indexOf()
-// if 
-// return array[value]
+
 
 _.indexOf = function(array, value) {
-
-
+    // iterate through array
+    for (let i = 0; i < array.length; i++) {
+        // if value === array[i]...
+        if (value === array[i]) {
+            // return i
+            return i;
+        }
+    }
+    // if value in array not found, return -1
+    return -1;
 }
 
 /** _.contains
@@ -232,6 +242,20 @@ _.indexOf = function(array, value) {
 * Examples:
 *   _.contains([1,"two", 3.14], "two") -> true
 */
+_.contains = function(array, value) {
+    // initalize variable result to check if value is found in array (boolean value)
+    let result;
+    // iterate through the array
+    for (let i = 0; i < array.length; i++) {
+        // if array[i] === value, set result to true - otherwise set result to false
+        result = array[i] === value ? true : false;
+        // if result is true, return result...
+        if (result) {
+            return result;
+        }
+    // otherwise return result
+    } return result;
+}
 
 
 /** _.each
@@ -251,6 +275,26 @@ _.indexOf = function(array, value) {
 */
 
 
+
+_.each = function(collection, func) {
+    // if collection is an array
+    if (Array.isArray(collection)) {
+        // iterate through array
+        for (let i = 0; i < collection.length; i++) {
+            // invoke func
+            func(collection[i], i, collection) 
+        }
+    }
+    // if collection is an object
+    if (typeof collection === 'object' && !Array.isArray(collection) && collection !== null) {
+        // iterate through the collection
+        for (let key in collection) {
+            // invoke func
+            func(collection[key], key, collection)
+        }
+    }
+}
+
 /** _.unique
 * Arguments:
 *   1) An array
@@ -260,6 +304,29 @@ _.indexOf = function(array, value) {
 * Examples:
 *   _.unique([1,2,2,4,5,6,5,2]) -> [1,2,4,5,6]
 */
+
+
+
+_.unique = function(array) {
+    // declare storage array
+    let output = [];
+    // loop through array
+    for (let i = 0; i < array.length; i++) {
+        // on each iteration, invoke the indexOf function
+            // indexOf will return -1 if array[i] is not found in output 
+        // if invoking _.indexOf returns -1...
+        if (_.indexOf(output, array[i]) === -1) {
+            // push array[i] to output array
+            output.push(array[i]);
+        }
+    // return output
+    } return output;
+}
+
+
+
+
+
 
 
 /** _.filter
@@ -279,6 +346,40 @@ _.indexOf = function(array, value) {
 */
 
 
+_.filter = function(array, func) {
+    // declare result array
+    let result = [];
+    // iterate through array
+    for (let i = 0; i < array.length; i++) {
+        // invoke func(element, i, array) on each array[i], if true push to result array
+        if (func(array[i], i, array) === true) {
+            // push array[i] to result array
+            result.push(array[i]);
+        }
+    // return result array
+    } return result;     
+}
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+// filtering => taking a collection of data and returning a subset of that collection of the items that pass some type of test
+
+// mapping => taking a collection of data and using a callback function to createa  new collection of modified values 
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 /** _.reject
 * Arguments:
 *   1) An array
@@ -292,6 +393,20 @@ _.indexOf = function(array, value) {
 *   _.reject([1,2,3,4,5], function(e){return e%2 === 0}) -> [1,3,5]
 */
 
+_.reject = function(array, func) {
+    // create false array
+    let falseArr = [];
+    // iterate through array
+    for (let i = 0; i < array.length; i++) {
+        // if func === false
+        if (func(array[i], i, array) === false) {
+            // push value of array[i] to falseArr
+            falseArr.push(array[i]);
+        }
+    }
+    // return falseArr
+    return falseArr;
+}
 
 /** _.partition
 * Arguments:
@@ -312,6 +427,25 @@ _.indexOf = function(array, value) {
 }
 */
 
+_.partition = function(array, func) {
+    // create two arrays for truthy & falsey results
+    let trueResults = [];
+    let falseResults = [];
+    // iterate through array
+    for (let i = 0; i < array.length; i++) {
+        // if func is true...
+        if (func(array[i], i, array) === true) {
+            // push array[i] to trueResults
+            trueResults.push(array[i]);
+        } else {
+            // otherwise... push to falseResults array
+            falseResults.push(array[i]);
+        }
+    }
+    // return array w trueResults and falseResults
+    return [trueResults, falseResults];
+}
+
 
 /** _.map
 * Arguments:
@@ -329,62 +463,28 @@ _.indexOf = function(array, value) {
 *   _.map([1,2,3,4], function(e){return e * 2}) -> [2,4,6,8]
 */
 
-// _.map = function(collection, func) {
-//     // create output array
-//     let output = [];
-//     // determine if input collection is an array
-//     if (Array.hasArray(collection)) {
-//         // iterate over collection
-//         for (i = 0; i < collection.length; i++) {
-//             // push result of invoking function into output 
-//             output.push(func(collection[i], i, collection));
-//         }
-//         // otherwise...
-//     } else {
-//         // iterate over the collectioon
-        
-//     }
-//     // else it's an object
-//         // invoke function on the value, key, and collection
+_.map = function(collection, func) {
+    // create result array
+    let result = [];
+    // if collection is an array...
+    if (Array.isArray(collection)) {
+        // iterate through array
+        for (let i = 0; i < collection.length; i++) {
+            // push value of invoking func to result
+            result.push(func(collection[i], i, collection)) 
+        }
+    // otherwise...
+    } else {
+        // iterate through object
+        for (let key in collection) {
+            // push value of invoking func to result
+           result.push(func(collection[key], key, collection));
+        }
+    }
+    // return result
+    return result;
+}
 
-//     // return output array
-// }
-
-
-// _.map([1, 2, 3], function(num)) {
-//     return num * 3;
-// }; // [10, 20, 30]
-// // map
-//     // iterates over a collection and returns a new collection where each value has been "transformed" by a callback function
-//         // "transformed" => an individual value is passed to the callback and the return value of the callback is pushed into the output array
-
-// var nums = [1, 2, 3];
-
-// _.map(nums, function(num) {
-//     return num * 10;
-// });
-// // [10, 20, 30]
-
-// // another example
-
-// var letters = ['a', 'b', 'c'];
-// _.map(letters, function(letter) {
-//     return letter.toUpperCase();
-// });
-// // ['A', 'B', C']
-
-// // another example
-
-// var students = [
-//     { name: 'Colton', course: 'Bootcamp'},
-//     { name: 'Jerry', course: 'Bootcamp'},
-//     { name: 'Tyler', course: 'Precourse'}
-// ];
-
-// _.map(students, function(student) {
-//     return student.name;
-// });
-// // ['Colton', 'Jerry', 'Tyler']
 
 
 /** _.pluck
@@ -398,6 +498,18 @@ _.indexOf = function(array, value) {
 *   _.pluck([{a: "one"}, {a: "two"}], "a") -> ["one", "two"]
 */
 
+_.pluck = function(array, property) {
+    // create result array
+    let result = [];
+    // invoke _.map with the array as argument1 and function(obj) as argument 2
+        // function(obj) will return the obj[property]
+            // assign to result
+    result = _.map(array, function(obj) {
+         return obj[property];
+    });
+    // return result
+    return result;
+}
 
 /** _.every
 * Arguments:
@@ -419,6 +531,68 @@ _.indexOf = function(array, value) {
 *   _.every([2,4,6], function(e){return e % 2 === 0}) -> true
 *   _.every([1,2,3], function(e){return e % 2 === 0}) -> false
 */
+
+
+
+_.every = function(collection, func) {
+    // Initialize isTrue variable
+    let isTrue = true;
+
+    // if collection is an array..
+    if (Array.isArray(collection)) {
+        // iterate through array
+        for (let i = 0; i < collection.length; i++) {
+            // if func is not defined...
+            if (func === undefined) {
+                // check if any collection[i] is a false value
+                if (collection[i] === undefined || collection[i] === false || collection[i] === 0 || collection[i] === '' || collection[i] === null || Number.isNaN(collection[i])) {
+                    // if false value is found, set isTrue to false
+                    isTrue = false;
+                    // end the loop if false value is found
+                    break;
+                }
+            // if func is defined...
+            } else {
+                // invoke func on each element
+                if (!func(collection[i], i, collection)) {
+                    // if invoking func on an element returns false, set isTrue to false
+                    isTrue = false;
+                    // end the loop if false value is found
+                    break;
+                }
+            }
+        }
+    // if collection is an object
+    } else if (typeof collection === 'object' && collection !== null) {
+        // iterate through the object
+        for (let key in collection) {
+            // if func is not defined...
+            if (func === undefined) {
+                // check if any collection[key] is a false value
+                if (collection[key] === undefined || collection[key] === false || collection[key] === 0 || collection[key] === '' || collection[key] === null || Number.isNaN(collection[key])) {
+                    // if false value is found, set isTrue to false
+                    isTrue = false;
+                    // break the loop if false value is found
+                    break;
+                }
+            // if func is defined...
+            } else {
+                // if invoking the func on an element returns false
+                if (!func(collection[key], key, collection)) {
+                    // set isTrue to false
+                    isTrue = false;
+                    // end the loop if false value is found
+                    break;
+                }
+            }
+        }
+    }
+    // return isTrue 
+    return isTrue;
+};
+
+
+
 
 
 /** _.some
@@ -443,6 +617,70 @@ _.indexOf = function(array, value) {
 */
 
 
+
+_.some = function(collection, func) {
+    // create isTrue variable to check value
+    let isTrue = false;
+    // if collection is an array...
+    if (Array.isArray(collection)) {
+        // iterate through array
+        for (let i = 0; i < collection.length; i++) {
+            // if func is not defined
+            if (func === undefined) {
+                // check if element is truthy
+                if (collection[i]) {
+                    // if element is truthy, set isTrue to true
+                    isTrue = true;
+                    // break the loop
+                    break;
+                }
+            // otherwise if func is provided...
+            } else {
+                // if invoking func on element returns true
+                if (func(collection[i], i, collection)) {
+                    // set isTrue to true
+                    isTrue = true;
+                    // break the loop
+                    break;
+                }
+            }
+        }
+    // if collection is an object...
+    } else if (typeof collection === 'object' && collection !== null) {
+        // iterate through the collection
+        for (let key in collection) {
+            // if func is not defined
+            if (func === undefined) {
+                // if element is truthy
+                if (collection[key]) {
+                    // set isTrue to true
+                    isTrue = true;
+                    // break the loop
+                    break;
+                }
+            // if func is defined....
+            } else {
+                // if invoking func on element is true...
+                if (func(collection[key], key, collection)) {
+                    // set isTrue to true
+                    isTrue = true;
+                    // break loop 
+                    break;
+                }
+            }
+        }
+    }
+    // return isTrue
+    return isTrue;
+};
+
+
+
+
+
+
+
+
 /** _.reduce
 * Arguments:
 *   1) An array
@@ -463,6 +701,45 @@ _.indexOf = function(array, value) {
 */
 
 
+
+_.reduce = function(array, func, seed) {
+    // create output variable (accumlating)
+    let output;
+    // if seed is undefined...
+    if (seed === undefined) {
+        // assign first element to output
+        output = array[0];
+        // iterate through array starting from second element
+        for (let i = 1; i < array.length; i++) {
+            // reassign output to result of invoking func
+            output = func(output, array[i], i)
+        }
+    // if seed is defined...
+    } else {
+        // assign seed value to output
+        output = seed;
+        // iterate through array from first element
+        for (let i = 0; i < array.length; i++) {
+            // reassign output to the result of invoking func
+            output = func(output, array[i], i) 
+        }
+
+    }
+    // return output
+    return output;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 /** _.extend
 * Arguments:
 *   1) An Object
@@ -477,6 +754,30 @@ _.indexOf = function(array, value) {
 *   _.extend(data, {b:"two"}); -> data now equals {a:"one",b:"two"}
 *   _.extend(data, {a:"two"}); -> data now equals {a:"two"}
 */
+
+_.extend = function(object) {
+    // iterate through arguments starting from the second argument
+    for (let i = 1; i < arguments.length; i++) {
+        // assigns current source object to argument[i]. used to reference current sourceObject whose properties will be copied to targetobject
+        let sourceObj = arguments[i];
+        // iterate through properties in sourceObj
+        for (let key in sourceObj) {
+            // copy each property to target object (object)
+            object[key] = sourceObj[key];
+        }
+
+    }
+    // return target object
+    return object;
+}
+
+// function receives  objects
+// function copyies properties from object 2 to object 1
+
+
+
+
+
 
 //////////////////////////////////////////////////////////////////////
 // DON'T REMOVE THIS CODE ////////////////////////////////////////////
